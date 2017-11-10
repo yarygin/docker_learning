@@ -1,0 +1,19 @@
+{
+  "name": "yarygin/docker_test",
+  "description": "Learn the docker.",
+  "keywords": ["docker", "test"],
+  "license": "MIT",
+  "type": "project",
+  "require": {
+    "php": ">=7.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Yarygin\\": "app/"
+    }
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true
+  }
+}

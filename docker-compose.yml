@@ -1,0 +1,35 @@
+version: '3'
+
+volumes:
+  mysqldata:
+
+services:
+  phpserver:
+    image: php:7.1.11-fpm
+    volumes:
+      - ./:/var/www/
+
+  mysqlserver:
+    image: mysql
+    environment:
+      MYSQL_DATABASE: docker_test
+      MYSQL_ROOT_PASSWORD: docker
+    volumes:
+      - mysqldata:/var/lib/mysql
+    ports:
+      - "33060:3306"
+
+  nginx:
+    image: nginx
+    volumes:
+      - ./docker/nginx/:/etc/nginx/conf.d/
+    ports:
+      - "80:80"
+      - "443:443"
+    command: nginx -g 'daemon off';
+
+  composer:
+    image: "composer"
+    volumes:
+      - ".:/app"
+    command: install
