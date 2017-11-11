@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  webserver:
+    image: php:apache
+    volumes:
+      - ./:/var/www/html/
+    depends_on:
+      - fluentd
+    ports:
+      - 8080:80
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: fluentd
+        tag: apache.access
+
+  fluentd:
+    build: docker/fluentd
+    volumes:
+      - ./docker/fluentd/:/fluentd/etc
+    ports:
+      - 24224:24224
+      - 24224:24224/udp
+
+  elasticsearch:
+    image: elasticsearch
+    expose:
+      - 9200
+    ports:
+      - 9200:9200
+
+  kibana:
+    image: kibana
+    ports:
+      - 5601:5601
