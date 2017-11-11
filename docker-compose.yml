@@ -4,30 +4,23 @@ volumes:
   mysqldata:
 
 services:
-  phpserver:
+  php:
     build: docker/php
     volumes:
       - ./:/var/www/
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: fluentd
-        tag: php
+# TODO: Learn how to separate yml
+#    logging:
+#      driver: "fluentd"
+#      options:
+#        fluentd-address: 127.0.0.1:24224
+#        tag: php
 
   mysqlserver:
     image: mysql
-    environment:
-      MYSQL_DATABASE: docker_test
-      MYSQL_ROOT_PASSWORD: docker
     volumes:
       - mysqldata:/var/lib/mysql
     ports:
       - "33060:3306"
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: fluentd
-        tag: mysql
 
   nginx:
     image: nginx
@@ -37,34 +30,9 @@ services:
       - "80:80"
       - "443:443"
     command: nginx -g 'daemon off';
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: fluentd
-        tag: nginx
 
   composer:
     image: "composer"
     volumes:
       - ".:/app"
     command: install
-
-  fluentd:
-    build: docker/fluentd
-    volumes:
-      - ./docker/fluentd/:/fluentd/etc
-    ports:
-      - 24224:24224
-      - 24224:24224/udp
-
-  elasticsearch:
-    image: elasticsearch
-    expose:
-      - 9200
-    ports:
-      - 9200:9200
-
-  kibana:
-    image: kibana
-    ports:
-      - 5601:5601
