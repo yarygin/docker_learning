@@ -5,7 +5,7 @@ volumes:
 
 services:
   phpserver:
-    image: php:7.1.11-fpm
+    build: docker/php
     volumes:
       - ./:/var/www/
 
